@@ -28,4 +28,29 @@ const fetchMyIP = function(callback) {
   });
 };
 
-module.exports = { fetchMyIP };
+
+const fetchCoordsByIP = function(ip, callback) {
+  request("http://ipwho.is/" + ip, (error, response, body) => {
+ 
+  if (error) {
+    return callback(error, null);
+  }
+
+  bodyParse = JSON.parse(body);
+
+    if (bodyParse.success === false) {
+      const message = `Success status is: ${bodyParse.success}`;
+      return callback(message, null);
+    }
+
+    coordinates = {};
+    coordinates.latitude = bodyParse.latitude;
+    coordinates.longitude = bodyParse.longitude;
+  
+  return callback(null, coordinates);
+})
+};
+
+
+
+module.exports = { fetchMyIP, fetchCoordsByIP };
